@@ -3,3 +3,8 @@ c:\users\pc100\documents\visual studio 2013\Projects\ConsoleApplication2\ReportL
 c:\users\pc100\documents\visual studio 2013\Projects\ConsoleApplication2\ReportLibrary\obj\Debug\ReportLibrary.dll
 c:\users\pc100\documents\visual studio 2013\Projects\ConsoleApplication2\ReportLibrary\obj\Debug\ReportLibrary.pdb
 C:\Users\PC100\documents\visual studio 2013\Projects\ConsoleApplication2\ReportLibrary\obj\Debug\ReportLibrary.csprojResolveAssemblyReference.cache
+C:\Users\J\Documents\GitHub\ConsoleApplicationReportLibrary\ConsoleApplication2\ReportLibrary\obj\Debug\ReportLibrary.dll
+C:\Users\J\Documents\GitHub\ConsoleApplicationReportLibrary\ConsoleApplication2\ReportLibrary\obj\Debug\ReportLibrary.pdb
+C:\Users\J\Documents\GitHub\ConsoleApplicationReportLibrary\ConsoleApplication2\ReportLibrary\bin\Debug\ReportLibrary.dll
+C:\Users\J\Documents\GitHub\ConsoleApplicationReportLibrary\ConsoleApplication2\ReportLibrary\bin\Debug\ReportLibrary.pdb
+C:\Users\J\Documents\GitHub\ConsoleApplicationReportLibrary\ConsoleApplication2\ReportLibrary\bin\Debug\stdole.dll

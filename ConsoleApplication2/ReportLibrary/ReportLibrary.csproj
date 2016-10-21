@@ -43,6 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConnectionAdapter.cs" />
+    <Compile Include="FileExtension.cs" />
+    <Compile Include="ReportFiles.cs" />
     <Compile Include="ReportViewer.cs" />
     <Compile Include="DocumentFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
