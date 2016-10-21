@@ -1,0 +1,5 @@
+c:\users\pc100\documents\visual studio 2013\Projects\ConsoleApplication2\ReportLibrary\bin\Debug\ReportLibrary.dll
+c:\users\pc100\documents\visual studio 2013\Projects\ConsoleApplication2\ReportLibrary\bin\Debug\ReportLibrary.pdb
+c:\users\pc100\documents\visual studio 2013\Projects\ConsoleApplication2\ReportLibrary\obj\Debug\ReportLibrary.dll
+c:\users\pc100\documents\visual studio 2013\Projects\ConsoleApplication2\ReportLibrary\obj\Debug\ReportLibrary.pdb
+C:\Users\PC100\documents\visual studio 2013\Projects\ConsoleApplication2\ReportLibrary\obj\Debug\ReportLibrary.csprojResolveAssemblyReference.cache
