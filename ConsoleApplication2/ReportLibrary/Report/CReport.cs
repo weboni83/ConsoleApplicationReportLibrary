@@ -144,6 +144,7 @@ namespace ReportLibrary.Report
             DataSet ds = new DataSet();
             DataTable dt = new DataTable("Table");
             ds.Tables.Add(dt);
+            ds.Tables.Add(dt.Clone().TableName = "Table1");
 
             Console.WriteLine(string.Format(@"Run Query File {0}.{1} Return {0} DataSet", ReportName, FileExtension.sql, ReportName));
 
