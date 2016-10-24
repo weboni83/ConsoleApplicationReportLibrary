@@ -23,7 +23,7 @@ namespace ReportLibrary
         {
             
         }
-
+        //ReportSoucre를 Property로 지정해도 됨.
         public override void SetReportSource(object dataSet)
         {
             _reportViewer1 = dataSet;

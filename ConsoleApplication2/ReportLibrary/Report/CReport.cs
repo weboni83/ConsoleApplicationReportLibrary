@@ -1,56 +1,11 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
 using CrystalDecisions.Shared;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReportLibrary.Report
 {
-    public enum ReportFiles
-    {
-        [Description("테스트1")]
-        Zf0142,
-        [Description("테스트1")]
-        ZF0142_01,
-        ZF0701_01,
-        ZF0701_02,
-        ZF0701_03,
-        ZF0701_04,
-        ZF0703_01,
-        ZF0703_02,
-        ZF0703_03,
-        ZF0703_04,
-        ZF0840,
-        ZF1510,
-        ZF1510_01,
-        [Description("검사JIG 유효성 평가")]
-        ZF1705,
-        [Description("생산JIG 유효성 평가")]
-        ZF1708,
-        ZFS140_01,
-        ZFS140_02,
-        ZFS140_03,
-        ZFS140_04,
-        ZFS140_05,
-        ZFS140_06
-    }
-
-    public enum FileExtension
-    {
-        [Description("Report File Extension")]
-        rpt,
-        [Description("Schema File Extension")]
-        xsd,
-        [Description("Query File Extension")]
-        sql,
-    }
-
     public class CReport : Report
     {
         //Solution Path
@@ -59,18 +14,19 @@ namespace ReportLibrary.Report
         string path = String.Format("{0}\\{1}", Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName, System.Reflection.Assembly.GetExecutingAssembly().GetName().Name);
 
 
-        ReportDocument reportDocument = new ReportDocument();
+        ReportDocument reportDocument;
 
         public string ReportName { get; set; }
 
         //멤버없이 생성할경우, ReportName이 반드시 필요하다.
         public CReport()
         {
-            Console.WriteLine(String.Format(@"Construct() {0}", ReportName));
+            Console.WriteLine(String.Format(@"Construct() : this() {0}", ReportName));
+            reportDocument = new ReportDocument();
         }
 
         public CReport(ReportFiles reportName)
-            : base()
+            : this()
         {
             Console.WriteLine(String.Format(@"Construct ({0})", reportName));
             ReportName = reportName.ToString();
@@ -89,9 +45,12 @@ namespace ReportLibrary.Report
 
         public override void SetDataSource()
         {
+            
             DataSet DS = new DataSet();
+            DS = RunQuery();
+            //SetDataSource 실행시 오류... 확인이 필요함.
             reportDocument.SetDataSource(DS);
-            Console.WriteLine(string.Format(@"Loaded Type : {0}, Files : {1}.{2}", reportDocument.GetClassName(), ReportName, FileExtension.rpt));
+            Console.WriteLine(string.Format(@"Set DataSource {0}", ReportName));
         }
 
         //int index, string name, object value, string subreport
@@ -131,63 +90,64 @@ namespace ReportLibrary.Report
                 info.SetConnection("192.168.1.230", "MyBatisTest", "sa", "sap2014!#%");
             }
 
-            //reportDocument.SetDatabaseLogon("sa", "sap2014!#%", "192.168.1.230", "MyBatisTest");
-            //reportDocument.VerifyDatabase();
-            Console.WriteLine(string.Format(@"SetDatabaseLogon : {0}", reportDocument.));
+            Console.WriteLine(string.Format(@"SetDatabaseLogon : {0}", reportDocument.DataSourceConnections));
 
         }
-        //Void : 참조 때문에 CrystalDecisions 는 사용안하는것으로...
-        public ConnectionInfo GetConnectionInfo()
+        //Void : 참조 때문에 CrystalDecisions 는 사용안하는것으로... 대신 ConnectionAdapter Class추가해서 설정
+        public ConnectionAdapter GetConnectionInfo()
         {
+            ConnectionAdapter conAdapter = new ConnectionAdapter();
 
-            ConnectionInfo ConInfo = new ConnectionInfo();
-
-            Console.WriteLine(string.Format(@"Return ConnectionInfo : {0}", reportDocument.DataSourceConnections));
-            return ConInfo;
-        }
-
-        /// <summary>
-        /// 해당 클래스의 Assembly에 존재하는 모든 Class 중 BaseType이 CrystalDecisions.CrystalReports.Engine.ReportClass인 목록을 호출함.
-        /// </summary>
-        /// <returns>Report Class List</returns>
-        public List<string> GetReportInstances()
-        {
-            List<string> list = new List<string>();
-            Assembly assembly = typeof(CReport).Assembly;
-            foreach (Type type in assembly.GetTypes())
+            foreach (IConnectionInfo info in reportDocument.DataSourceConnections)
             {
-                if (type.BaseType.FullName.Equals("CrystalDecisions.CrystalReports.Engine.ReportClass"))
-                {
-                    //Console.WriteLine(type.Name);
-                    //ReportName is Class Name
-                    list.Add(type.Name);
-                }
+                conAdapter.SetConnection(info.ServerName, info.DatabaseName, info.UserID, info.Password);
             }
 
-            return list;
+            Console.WriteLine(string.Format(@"Return ConnectionInfo : {0}", conAdapter.ToString()));
+            return conAdapter;
         }
-        [Obsolete("사용할 필요가 없음.")]
-        public object GetCreatedInstance()
+
+        public void SetQuery()
         {
-            Assembly assembly = typeof(CReport).Assembly;
-            foreach (Type type in assembly.GetTypes())
+            ConnectionInfo connectionInfo = new ConnectionInfo();
+
+            foreach (IConnectionInfo info in reportDocument.DataSourceConnections)
             {
-                if (type.BaseType.FullName.Equals("CrystalDecisions.CrystalReports.Engine.ReportClass"))
-                {
-                    Console.WriteLine(type.Name);
-                    //ReportName is Class Name
-                    if (type.Name == ReportName)
-                    {
-                        Console.WriteLine("Create Instance : {0}", type.Name);
-
-                        return Activator.CreateInstance(type);
-                    }
-
-                }
+                connectionInfo.ServerName = info.ServerName;
+                connectionInfo.DatabaseName = info.DatabaseName;
+                connectionInfo.UserID = info.UserID;
+                connectionInfo.Password = "sap2014!#%";//info.Password;
             }
 
-            return null;
+            
+            string location = string.Empty;
+            location = String.Format(@"{0}\Script\{1}.{2}", path, ReportName, FileExtension.sql);
+
+            if (string.IsNullOrEmpty(location))
+                return;
+
+            string script = File.ReadAllText(@location);
+
+            //reportDocument.SetSQLCommandTable(connectionInfo, "Table", script);
+
+            Console.WriteLine(location);
+            Console.WriteLine(string.Format(@"Loaded Type : {0}, Files : {1}.{2}", reportDocument.GetClassName(), ReportName, FileExtension.sql));
         }
 
+        public void SetCondition()
+        {
+            Console.WriteLine(string.Format(@"SetCondition : {0}", ReportName));
+        }
+
+        public DataSet RunQuery()
+        {
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable("Table");
+            ds.Tables.Add(dt);
+
+            Console.WriteLine(string.Format(@"Run Query File {0}.{1} Return {0} DataSet", ReportName, FileExtension.sql, ReportName));
+
+            return ds;
+        }
     }
 }
