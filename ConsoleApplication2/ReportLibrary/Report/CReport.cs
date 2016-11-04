@@ -92,7 +92,7 @@ namespace ReportLibrary.Report
             Console.WriteLine(string.Format(@"SetDatabaseLogon : {0}", reportDocument.DataSourceConnections));
 
         }
-        //Void : 참조 때문에 CrystalDecisions 는 사용안하는것으로...
+        //Void : 참조 때문에 CrystalDecisions 는 사용안하는것으로 ConnectionAdapter 추가. Text로 저장함.
         public ConnectionAdapter GetConnectionInfo()
         {
             ConnectionAdapter conAdapter = new ConnectionAdapter();
